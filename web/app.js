@@ -342,7 +342,7 @@ function renderDraft() {
   const ln = (k, v, cls = '') => `<div class="ln ${cls}"><span>${k}</span><b class="num">${v}</b></div>`;
   $('cost').innerHTML = ln(t('投入', 'You put in'), fmt(d.amount), 'tot') + ln(t('立刻进奖金池（95%）', 'Straight into the prize pool (95%)'), amt(d.amount - fee)) + ln(t('平台手续费（5%）', 'Platform fee (5%)'), amt(fee))
     + `<div class="ln"><span>${t('不能撤回', 'Final')}</span><b>${t('钱进池后归奖金池，不退', 'once in the pool it stays there')}</b></div>`
-    + (d.errs.length ? `<div class="bad">${d.errs.map(esc).join(' · ')}</div>` : '');
+    + (d.errs.length && !(!d.title && !d.body && !d.link && !d.video) ? `<div class="bad">${d.errs.map(esc).join(' · ')}</div>` : ''); // an untouched (or just published, so cleared) form shows no complaints
   $('publish').disabled = busy || d.errs.length > 0;
   $('publish').textContent = d.errs.length ? t('付款并发布', 'Pay and publish') : t(`付 ${fmt(d.amount)} 立即发布`, `Pay ${fmt(d.amount)} and publish now`);
   const pv = { id: 0, title: d.title || t('你的标题', 'Your title'), body: d.body, link: d.link || 'https://', video: d.video };

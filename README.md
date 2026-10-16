@@ -4,6 +4,8 @@ TapeOut ecosystem, X Layer, **native OKB** (user's call, 2026-10-16; was USDT): 
 
 Built for the **X Layer TapeOut Accelerate** program (OKX × TapeOut, 100K USDT; submit before **2026-12-07 23:59 UTC**). Form: https://forms.gle/EoDNbxQ65dev1wFd9 (needs a GitHub repo and a demo video ≤3 min). Draft answers: `hackathon/submission.md` (written for the earlier CPS model; update before submitting).
 
+**Demo video** (2:06, Chinese narration, Chinese + English captions): [media/peekbox-demo.mp4](media/peekbox-demo.mp4). Live site: https://1-2-339.tapekit.org/
+
 ## Rules (user decisions of 2026-10-16, all enforced by the contract)
 
 - **Advertisers** `publish(title, body, link, video)` sending at least `minDeposit` (0.001 OKB) as the call's value, no approve step: **5% to `fees`, 95% straight into `pool`**. No CPS, no number of openings, **no refunds**. An ad is **permanent**: nobody can take it down or hide it, the owner included (user's call). Anyone can `deposit(id)` more OKB into any ad. `video` is an optional https file (mp4); without it the page shows a text card. No images.
