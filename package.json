@@ -1,0 +1,14 @@
+{
+  "name": "meow-box",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/dev.mjs",
+    "start": "node server/server.mjs",
+    "test": "cd contracts && ~/.foundry/bin/forge test",
+    "slither": "cd contracts && PATH=$HOME/.local/bin:$HOME/.foundry/bin:$PATH slither . --filter-paths 'lib/|test/|script/' --exclude-dependencies --exclude incorrect-equality,timestamp,assembly,low-level-calls,cyclomatic-complexity,missing-inheritance"
+  },
+  "dependencies": {
+    "ethers": "6.17.0"
+  }
+}

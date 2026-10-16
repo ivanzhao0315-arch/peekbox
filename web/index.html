@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="瞄一箱 PeekBox：开宝箱看广告，看完揭晓，开箱抽 OKB。广告主自己定 CPS 单价，95% 进公开奖金池、5% 手续费；开箱、跳转次数全部链上记账。PeekBox: open the box, watch an ad, win 0.1 USDT. Advertisers set a CPS price; 95% goes into a public prize pool, 5% is the fee; openings and clicks are counted on chain.">
+<title data-en="PeekBox">瞄一箱 PeekBox</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="nEdge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4E7C6"/><stop offset=".45" stop-color="#CDB27A" stop-opacity=".55"/><stop offset="1" stop-color="#CDB27A" stop-opacity=".1"/></linearGradient>
+    <linearGradient id="nGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1C1B1F"/><stop offset="1" stop-color="#0B0B0D"/></linearGradient>
+    <radialGradient id="nSlit" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF6DD"/><stop offset=".35" stop-color="#E8D6A8"/><stop offset="1" stop-color="#CDB27A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="nAura" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#CDB27A" stop-opacity=".3"/><stop offset="1" stop-color="#CDB27A" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+<header class="top">
+  <div class="wrap topin">
+    <a class="brand" href="./"><img src="logo.svg" alt="" width="28" height="28"><span data-en="Peek<b>Box</b>">瞄一<b>箱</b></span></a>
+    <nav class="nav" aria-label="sections">
+      <a href="#box" data-view="box" data-en="Open">开箱</a>
+      <a href="#advertise" data-view="advertise" data-en="Advertise">投广告</a>
+      <a href="#rules" data-view="rules" data-en="Rules">规则</a>
+    </nav>
+    <span id="net" class="chip"><i class="dot"></i><span></span></span>
+    <button id="connect" class="btn" type="button" data-en="Connect wallet">连接钱包</button>
+    <span id="wallet" class="chip hidden"></span>
+  </div>
+</header>
+<main class="wrap">
+  <div id="pending" class="pending hidden"><span id="pendingText"></span><button id="claimBtn" class="btn" type="button" data-en="Claim">领取</button></div>
+
+  <div id="msg" class="msg"></div>
+  <div class="view" id="v-box">
+  <div class="boxlayout">
+    <div class="feed" id="feed" tabindex="0" aria-label="swipe up for the next box" data-en-aria="swipe up for the next box">
+      <div class="feedtop"><span class="pill gold" id="poolPill"></span><span class="pill" id="gasPill"></span></div>
+      <div id="card" class="fcard"></div>
+      <button id="nextBtn" class="nextbtn" type="button"><span data-en="Swipe up · next box">上滑 · 下一箱</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+    </div>
+    <aside class="poolcard sidestats">
+      <div class="live" data-en="<i class='dot'></i>Prize pool · live on chain"><i class="dot"></i>奖金池 · 链上实时公示</div>
+      <div class="poolv"><b id="pool" class="num">—</b> <span id="sym"></span></div>
+      <div class="muted" data-en="95% of every opening goes in; the pool only ever leaves as prizes.">每次开箱，广告费的 95% 进池；奖金池只能以奖金的形式发出。</div>
+      <div class="trio">
+        <div><span data-en="Paid out">累计派奖</span><b id="paid" class="num">—</b></div>
+        <div><span data-en="Wins">中奖次数</span><b id="wins" class="num">—</b></div>
+        <div><span data-en="Boxes opened">累计开箱</span><b id="opens" class="num">—</b></div>
+      </div>
+      <div class="wlh" data-en="Prizes · every box is one draw">奖级 · 每一箱抽一次</div>
+      <div class="tiers" id="tiers"></div>
+      <div class="wl"><div class="wlh" data-en="Recent wins">最近中奖</div><div id="recent"></div></div>
+    </aside>
+  </div>
+  </div>
+  <div class="view" id="v-advertise" hidden>
+  <section class="panel">
+    <div class="sh"><h2 data-en="Advertise">投一条广告</h2><span class="muted" data-en="Web pages, App Store, Google Play, Telegram… Live the moment you pay, for good.">网页、App Store、Google Play、Telegram 都行。付款即上线，永久在线。</span></div>
+    <div class="adform">
+      <div class="fields">
+        <label><span data-en="Title">标题</span><input id="fTitle" maxlength="80" data-en-placeholder="Your app, site or product" placeholder="你的 App、网站或产品"><small id="cTitle"></small></label>
+        <label><span data-en="Description">简介</span><textarea id="fBody" rows="2" data-en-placeholder="One or two lines: what it is, why open it" placeholder="一两句话：是什么、为什么值得点"></textarea><small id="cBody"></small></label>
+        <label><span data-en="Link (https://…)">链接（https://…）</span><input id="fLink" inputmode="url" placeholder="https://apps.apple.com/app/id…"></label>
+        <label><span data-en="Video link (optional: an https .mp4, portrait, under 15 s works best)">视频链接（选填：https 的 mp4，竖屏、15 秒内最好）</span><input id="fVideo" inputmode="url" placeholder="https://…/ad.mp4"></label>
+        <label><span id="lAmount"></span><input id="fAmount" inputmode="decimal" value="0.05"></label>
+        <div class="share"><i id="shareBar"></i></div>
+        <div id="amountNote" class="muted"></div>
+        <div id="cost" class="receipt"></div>
+        <button id="publish" class="btn big" type="button" data-en="Pay and publish">付款并发布</button>
+      </div>
+      <div class="side">
+        <div class="muted" data-en="What people see when your ad comes up">开箱的人看到的样子</div>
+        <div id="preview"></div>
+      </div>
+    </div>
+  </section>
+  <section class="panel hidden" id="mineCard">
+    <div class="sh"><h2 data-en="My ads">我的广告</h2></div>
+    <div class="scroll"><table><thead><tr><th data-en="Ad">广告</th><th class="r" data-en="Put in">累计投入</th><th class="r" data-en="Share of views">曝光占比</th><th class="r" data-en="Opened">开箱</th><th class="r" data-en="Clicked">跳转</th><th class="r" data-en="Click rate">跳转率</th><th></th></tr></thead><tbody id="mine"></tbody></table></div>
+  </section>
+  <section>
+    <div class="sh"><h2 data-en="All ads">全部广告</h2><span class="muted" data-en="Shown in proportion to the money put in · openings and clicks counted on chain">按投入金额分配曝光 · 开箱与跳转次数链上记账</span></div>
+    <div id="adgrid" class="adgrid"></div>
+  </section>
+  <section class="panel hidden" id="adminCard">
+    <div class="sh"><h2 data-en="Owner: fees">平台：手续费</h2></div>
+    <div class="row"><span id="feesLine"></span><span class="sp"></span><button id="collectBtn" class="btn" type="button" data-en="Collect the fee">提取手续费</button></div>
+    <div class="row"><input id="fundAmt" class="in sm" inputmode="decimal" value="0.1"><button id="fundBtn" class="btn ghost" type="button" data-en="Add to the prize pool">充值奖金池</button></div>
+  </section>
+  </div>
+  <div class="view" id="v-rules" hidden>
+  <section class="steps">
+    <div><i>01</i><div><b data-en="Open the box">开宝箱</b><p data-en="One transaction, a little gas. The contract picks a live ad for you.">一笔交易，只付一点 gas。合约从投放中的广告里挑一条给你。</p></div></div>
+    <div><i>02</i><div><b data-en="Watch the ad">看完广告</b><p data-en="You see each ad at most once a day. The higher an ad's CPS price, the better this box's chance.">同一条广告你一天只会看到一次。单价越高的广告，这一箱越容易中。</p></div></div>
+    <div><i>03</i><div><b data-en="See the result">揭晓结果</b><p data-en="Decided by the next block's hash; nobody can change it. Press Claim when you win.">由下一个区块的哈希决定，谁都改不了。中了点「领取」到账。</p></div></div>
+  </section>
+  <section class="panel">
+    <div class="sh"><h2 data-en="How it works">规则</h2></div>
+    <ul class="rules" id="rules"></ul>
+  </section>
+  </div>
+  <footer class="foot"><span data-en="Built on TapeOut · site stored on chain (DeWEB) · no server">基于 TapeOut · 网站存在链上（DeWEB）· 没有服务器</span><span id="footC"></span></footer>
+</main>
+
+<nav class="tabbar" aria-label="sections">
+  <a href="#box" data-view="box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V9a8 4 0 0 1 16 0v2"/><rect x="3" y="11" width="18" height="9" rx="2"/><path d="M10 11v3h4v-3"/></svg><span data-en="Open">开箱</span></a>
+  <a href="#advertise" data-view="advertise"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg><span data-en="Advertise">投广告</span></a>
+  <a href="#rules" data-view="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4Z"/><path d="M9 9h6M9 13h6"/></svg><span data-en="Rules">规则</span></a>
+</nav>
+<script src="i18n.js"></script>
+<script src="config.js"></script>
+<script src="ethers.umd.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
